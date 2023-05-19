@@ -1,6 +1,9 @@
 <script>
 import FileBrowser from './components/FileBrowser.vue'
-
+import emitter from './eventBus';
+emitter.on('select-folder',val=>{
+  console.log(val);
+})
 export default{
   name:'App',
   components:{FileBrowser}

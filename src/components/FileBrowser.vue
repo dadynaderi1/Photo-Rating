@@ -1,12 +1,11 @@
 <script>
 import fs from 'fs'
 import pathModule from 'path'
-
 import { app } from '@electron/remote'
 import { computed, ref } from 'vue'
+import emitter from '@/eventBus'
 
 import FilesViewer from './FilesViewer'
-
 const formatSize = size => {
   var i = Math.floor(Math.log(size) / Math.log(1024))
   return (
@@ -20,7 +19,9 @@ export default {
   name: 'FileBrowser',
   components: { FilesViewer },
   setup() {
+
     const path = ref(app.getAppPath())
+    emitter.emit('select-folder',this,path)
     const files = computed(() => {
       const fileNames = fs.readdirSync(path.value)
       return fileNames
@@ -48,12 +49,14 @@ export default {
     }
 
     const searchString = ref('')
+    
     const filteredFiles = computed(() => {
       return searchString.value
         ? files.value.filter(s => s.name.startsWith(searchString.value))
         : files.value
+        
     })
-
+    
     return {
       path,
 
@@ -67,13 +70,14 @@ export default {
   }
 }
 
+
 </script>
 
 <template>
   <!-- Sidebar -->
   <nav id="sidebar">
       <div class="sidebar-header">
-          <h5>{{ path }}</h5>
+          <h5 @change="select-folder">{{ path }}</h5>
       </div>
 
       <ul class="list-unstyled components">

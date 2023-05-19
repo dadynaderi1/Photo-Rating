@@ -1,3 +1,3 @@
-import Vue from 'vue';
-
-export const eventBus = new Vue();
+import Emitter from 'tiny-emitter';
+var emitter = new Emitter();
+export default emitter;
